@@ -1,0 +1,42 @@
+#!/bin/bash
+
+echo -e "\nEnter the dirctory you wish to search for: "
+read -r var_dir
+
+result=$(find /home/ -type d -name "$var_dir" 2>/dev/null)
+
+if [ -n "$result" ]; then
+         printf "\nDirectory exists! \n--->$result"
+
+         echo -e "\n \nWould you like to find a file within? [Y/n]"
+         read -r answer
+
+                if [[ "$answer" =~ ^[Yy]$ ]]; then
+                        echo -e "\nEnter the name of the file:"
+                        read -r file
+
+                        file_details=$(ls -lisa "$result" | grep "$file")
+
+                        if [[ -n "$file_details" ]]; then
+                                echo -e "\nFile exisst!"
+                                echo "$file_details"
+                        else
+                                echo -e "\nFile does not exist :("
+                                echo -e "\nWould you like to create it? :D [Y/n]"
+                                read -r create_answer
+                                        if [[ "$create_answer" =~ ^[Yy]$ ]]; then
+                                                touch "$result/$file"
+
+                                                echo -e "\nFile created:"
+                                                ls -lisa "$result" | grep "$file"
+                                        else
+                                                echo -e "\nOkie thanks bye!"
+                                        fi
+                        fi
+
+                else
+                        echo -e "\nOkie thanks bye!"
+                fi
+else
+        echo "Directory does not exist"
+fi
